@@ -163,7 +163,7 @@ private struct BowelCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            CardHeader(title: "排便記録", historyLabel: "排便の履歴を見る", onHistory: onHistory)
+            CardHeader(title: "排便", historyLabel: "排便の履歴を見る", onHistory: onHistory)
             
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text("\(count)")
@@ -172,6 +172,7 @@ private struct BowelCard: View {
                     .font(.system(size: 16, weight: .medium))
             }
             .foregroundStyle(Theme.primaryText)
+            .frame(maxWidth: .infinity, alignment: .trailing)
             .accessibilityElement(children: .combine)
             
             // 左：すぐ記録 ／ 右：種類を選ぶ（分割ボタン）
@@ -262,7 +263,7 @@ private struct MedicationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             CardHeader(
-                title: "服用記録",
+                title: "服用",
                 historyLabel: "服用の履歴を見る",
                 onHistory: onHistory
             )

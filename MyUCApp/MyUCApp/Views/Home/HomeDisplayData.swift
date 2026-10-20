@@ -29,30 +29,74 @@ enum MealType: CaseIterable, Identifiable {
     /// 未記録のときの背景色
     var lightColor: Color {
         switch self {
-        case .breakfast: return Color(hex: 0xFFF1D6)
-        case .lunch:     return Color(hex: 0xDFF0FB)
-        case .dinner:    return Color(hex: 0xE6E3F8)
-        case .snack:     return Color(hex: 0xFBE4E6)
+        case .breakfast:
+            return Color.clear
+        case .lunch:
+            return Color.clear
+        case .dinner:
+            return Color.clear
+        case .snack:
+            return Color.clear
         }
     }
     
     /// 記録済みの背景色・文字色
     var strongColor: Color {
         switch self {
-        case .breakfast: return Color(hex: 0x9A5B00)
-        case .lunch:     return Color(hex: 0x0B6A9C)
-        case .dinner:    return Color(hex: 0x4B3FA8)
-        case .snack:     return Color(hex: 0xA8344A)
+        case .breakfast:
+            return Color(
+                red: 224,
+                green: 146 / 255,
+                blue: 0 / 255
+            )
+        case .lunch:
+            return Color(
+                red: 47 / 255,
+                green: 169 / 255,
+                blue: 188 / 255
+            )
+        case .dinner:
+            return Color(
+                red: 108 / 255,
+                green: 92 / 255,
+                blue: 231 / 255
+            )
+        case .snack:
+            return Color(
+                red: 193 / 255,
+                green: 6 / 255,
+                blue: 6 / 255
+            )
         }
     }
     
     /// 未記録のときの枠線の色
     var borderColor: Color {
         switch self {
-        case .breakfast: return Color(hex: 0xF2C879)
-        case .lunch:     return Color(hex: 0x9CCBE8)
-        case .dinner:    return Color(hex: 0xB5AEE6)
-        case .snack:     return Color(hex: 0xEDB0B8)
+        case .breakfast:
+            return Color(
+                red: 224,
+                green: 146 / 255,
+                blue: 0 / 255
+            )
+        case .lunch:
+            return Color(
+                red: 47 / 255,
+                green: 169 / 255,
+                blue: 188 / 255
+            )
+        case .dinner:
+            return Color(
+                red: 108 / 255,
+                green: 92 / 255,
+                blue: 231 / 255
+            )
+        case .snack:
+            return Color(
+                red: 193 / 255,
+                green: 6 / 255,
+                blue: 6 / 255
+            )
         }
     }
 }
@@ -79,6 +123,80 @@ enum MedicationSlot: CaseIterable, Identifiable {
         case .noon:    return "sun.max"
         case .evening: return "moon"
         case .other:   return "ellipsis"
+        }
+    }
+    
+    /// 未記録のときの背景色
+    var lightColor: Color {
+        switch self {
+        case .morning:
+            return Color.clear
+        case .noon:
+            return Color.clear
+        case .evening:
+            return Color.clear
+        case .other:
+            return Color.clear
+        }
+    }
+    
+    /// 記録済みの背景色・文字色
+    var strongColor: Color {
+        switch self {
+        case .morning:
+            return Color(
+                red: 224,
+                green: 146 / 255,
+                blue: 0 / 255
+            )
+        case .noon:
+            return Color(
+                red: 47 / 255,
+                green: 169 / 255,
+                blue: 188 / 255
+            )
+        case .evening:
+            return Color(
+                red: 108 / 255,
+                green: 92 / 255,
+                blue: 231 / 255
+            )
+        case .other:
+            return Color(
+                red: 193 / 255,
+                green: 6 / 255,
+                blue: 6 / 255
+            )
+        }
+    }
+    
+    /// 未記録のときの枠線の色
+    var borderColor: Color {
+        switch self {
+        case .morning:
+            return Color(
+                red: 224,
+                green: 146 / 255,
+                blue: 0 / 255
+            )
+        case .noon:
+            return Color(
+                red: 47 / 255,
+                green: 169 / 255,
+                blue: 188 / 255
+            )
+        case .evening:
+            return Color(
+                red: 108 / 255,
+                green: 92 / 255,
+                blue: 231 / 255
+            )
+        case .other:
+            return Color(
+                red: 193 / 255,
+                green: 6 / 255,
+                blue: 6 / 255
+            )
         }
     }
 }
@@ -113,8 +231,8 @@ extension HomeDisplayData {
         return HomeDisplayData(
             today: today,
             bowelCount: 2,
-            takenMedicationSlots: [.morning],
-            recordedMeals: [.breakfast, .snack],
+            takenMedicationSlots: [],
+            recordedMeals: [.breakfast, .lunch, .dinner, .snack],
             nextVisit: NextVisit(
                 hospitalName: "○○総合病院",
                 department: "消化器内科",

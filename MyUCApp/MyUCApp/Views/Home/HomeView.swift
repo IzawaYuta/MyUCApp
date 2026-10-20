@@ -21,33 +21,35 @@ struct HomeView: View {
     var actions: HomeActions = HomeActions()
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                DateHeader(date: data.today)
-                ConditionButton(action: actions.openCondition)
-                BowelCard(
-                    count: data.bowelCount,
-                    onQuickAdd: actions.addBowelQuickly,
-                    onPickType: actions.openBowelTypePicker,
-                    onHistory: actions.openBowelHistory
-                )
-                MedicationCard(
-                    taken: data.takenMedicationSlots,
-                    onTap: actions.tapMedication,
-                    onHistory: actions.openMedicationHistory
-                )
-                MealCard(
-                    recorded: data.recordedMeals,
-                    onTap: actions.tapMeal,
-                    onHistory: actions.openMealHistory
-                )
-                NextVisitCard(visit: data.nextVisit, today: data.today)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 14) {
+                    DateHeader(date: data.today)
+                    ConditionButton(action: actions.openCondition)
+                    BowelCard(
+                        count: data.bowelCount,
+                        onQuickAdd: actions.addBowelQuickly,
+                        onPickType: actions.openBowelTypePicker,
+                        onHistory: actions.openBowelHistory
+                    )
+                    MedicationCard(
+                        taken: data.takenMedicationSlots,
+                        onTap: actions.tapMedication,
+                        onHistory: actions.openMedicationHistory
+                    )
+                    MealCard(
+                        recorded: data.recordedMeals,
+                        onTap: actions.tapMeal,
+                        onHistory: actions.openMealHistory
+                    )
+                    NextVisitCard(visit: data.nextVisit, today: data.today)
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 8)
-            .padding(.bottom, 24)
+            .background(Theme.background.ignoresSafeArea())
         }
-        .background(Theme.background.ignoresSafeArea())
     }
 }
 
@@ -147,7 +149,7 @@ private struct CardHeader: View {
                 .accessibilityLabel(historyLabel)
             }
         }
-        .frame(minHeight: 34)
+        .frame(maxHeight: 30)
     }
 }
 
@@ -160,12 +162,12 @@ private struct BowelCard: View {
     let onHistory: () -> Void
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            CardHeader(title: "今日の排便", historyLabel: "排便の履歴を見る", onHistory: onHistory)
+        VStack(alignment: .leading, spacing: 5) {
+            CardHeader(title: "排便記録", historyLabel: "排便の履歴を見る", onHistory: onHistory)
             
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text("\(count)")
-                    .font(.system(size: 44, weight: .bold))
+                    .font(.system(size: 40, weight: .bold))
                 Text("回")
                     .font(.system(size: 16, weight: .medium))
             }
@@ -222,13 +224,14 @@ private struct SquareRecordButton: View {
                 VStack(spacing: 4) {
                     Image(systemName: symbol)
                         .font(.system(size: 22))
+                        .frame(width: 24, height: 24)
                     Image(systemName: isDone ? "checkmark" : "plus")
                         .font(.system(size: 20, weight: .bold))
                 }
                 .foregroundStyle(isDone ? Color.white : strongColor)
                 .frame(width: 74, height: 74)
                 .background(
-                    isDone ? strongColor : lightColor,
+                    isDone ? strongColor : lightColor.opacity(0.3),
                     in: RoundedRectangle(cornerRadius: 16, style: .continuous)
                 )
                 .overlay {
@@ -260,7 +263,6 @@ private struct MedicationCard: View {
         VStack(alignment: .leading, spacing: 12) {
             CardHeader(
                 title: "服用記録",
-                systemImage: "pills",
                 historyLabel: "服用の履歴を見る",
                 onHistory: onHistory
             )
@@ -272,10 +274,10 @@ private struct MedicationCard: View {
                         title: slot.title,
                         symbol: slot.symbol,
                         isDone: isDone,
-                        lightColor: Theme.accentSoft,
-                        strongColor: Theme.accent,
-                        borderColor: Theme.line,
-                        titleColor: Theme.primaryText,
+                        lightColor: slot.lightColor,
+                        strongColor: slot.strongColor,
+                        borderColor: slot.borderColor,
+                        titleColor: slot.strongColor,
                         accessibilityText: isDone ? "\(slot.title)の薬 服用済み" : "\(slot.title)の薬を服用した",
                         action: { onTap(slot) }
                     )

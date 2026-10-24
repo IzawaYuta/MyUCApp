@@ -253,15 +253,12 @@ struct ConditionView: View {
             NumberRow(title: "体温", text: $form.temperatureText, unit: "℃", placeholder: "36.0")
             Divider()
             HStack {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("発熱")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(Theme.primaryText)
-                    Text("37.5℃以上など")
-                        .font(.system(size: 12))
-                        .foregroundStyle(Theme.secondaryText)
-                }
+                Text("発熱")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(Theme.primaryText)
+                
                 Spacer()
+                
                 Toggle("発熱", isOn: $form.hasFever)
                     .labelsHidden()
                     .tint(Theme.accent)
@@ -277,7 +274,7 @@ struct ConditionView: View {
     private var periodRow: some View {
         HStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text("生理（任意）")
+                Text("生理")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(Theme.primaryText)
                 Text("設定でオン・オフできます")
@@ -307,7 +304,7 @@ struct ConditionView: View {
     private var noteCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
-                SectionTitle("体調・症状（自由入力）")
+                SectionTitle("体調・症状")
                 Text("その日の様子や気になることを、自由に書けます")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.secondaryText)
@@ -320,7 +317,7 @@ struct ConditionView: View {
                     .padding(.horizontal, 9)
                     .padding(.vertical, 6)
                 if form.note.isEmpty {
-                    Text("例：朝から腹痛が少しある。夜はよく眠れた。")
+                    Text("朝から腹痛が少しある。夜はよく眠れた。")
                         .font(.system(size: 16))
                         .foregroundStyle(Color(hex: 0x8A9892))
                         .padding(.horizontal, 14)
@@ -572,7 +569,7 @@ private struct NumberRow: View {
             HStack(spacing: 6) {
                 TextField(placeholder, text: $text)
                     .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                    .multilineTextAlignment(.center)
                     .font(.system(size: 18, weight: .bold))
                     .padding(.horizontal, 10)
                     .frame(width: 84, height: 44)

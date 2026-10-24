@@ -104,19 +104,87 @@ struct ConditionView: View {
     
     // MARK: 全体の調子（顔の絵）
     
+    // MARK: - 全体の調子（5段階）
+    
     private var levelCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             SectionTitle("全体の調子")
-            HStack {
-                ForEach(ConditionLevel.allCases) { level in
-                    FaceButton(level: level, isSelected: form.level == level) {
-                        form.level = level
+            
+            // 左から「悪い → 普通 → 良い」の順に並べる
+            let levels: [ConditionLevel] = [
+                .bad,
+                .poor,
+                .normal,
+                .good,
+                .excellent
+            ]
+            
+            VStack(spacing: 1) {
+                // 5つの点と、点どうしをつなぐ線
+                HStack(spacing: 0) {
+                    ForEach(Array(levels.enumerated()), id: \.element.id) { index, level in
+                        let isSelected = form.level == level
+                        
+                        ZStack {
+                            // 線は「点ごとのマス」に左半分・右半分を描く。
+                            // 最初のマスの左側と、最後のマスの右側は描かないので、
+                            // 線が両端の点からはみ出ない。
+                            HStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(index == 0 ? Color.clear : Theme.line)
+                                Rectangle()
+                                    .fill(index == levels.count - 1 ? Color.clear : Theme.line)
+                            }
+                            .frame(height: 2)
+                            
+                            // 点
+                            Button {
+                                form.level = level
+                            } label: {
+                                Circle()
+                                    .fill(isSelected ? Theme.accent : Color.white)
+                                    .frame(width: 20, height: 20)
+                                    .overlay {
+                                        Circle()
+                                            .strokeBorder(
+                                                isSelected ? Theme.accent : Theme.line,
+                                                lineWidth: 2
+                                            )
+                                    }
+                                    .frame(width: 44, height: 44)   // タップしやすい大きさ
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(level.title)
+                            .accessibilityAddTraits(isSelected ? .isSelected : [])
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
                     }
-                    if level != ConditionLevel.allCases.last { Spacer(minLength: 0) }
                 }
+                
+                // 点の下にラベルを表示（1・3・5番目の点の真下）
+                HStack(spacing: 0) {
+                    Text("悪い")
+                        .frame(maxWidth: .infinity)
+                    
+                    Color.clear
+                        .frame(maxWidth: .infinity)
+                    
+                    Text("普通")
+                        .frame(maxWidth: .infinity)
+                    
+                    Color.clear
+                        .frame(maxWidth: .infinity)
+                    
+                    Text("良い")
+                        .frame(maxWidth: .infinity)
+                }
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(Theme.secondaryText)
             }
         }
-        .cardStyle(verticalPadding: 14)
+        .cardStyle(verticalPadding: 18)
     }
     
     // MARK: 腹痛の強さ

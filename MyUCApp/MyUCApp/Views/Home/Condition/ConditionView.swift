@@ -13,6 +13,9 @@ struct ConditionActions {
 
 /// Theme.swift と HomeModels.swift（HomeFormatters）を使っています。
 struct ConditionView: View {
+    
+    @State private var showSleepTimePickerView: Bool = false
+    
     var date: Date = HomeDisplayData.sample.today
     var actions: ConditionActions = ConditionActions()
     
@@ -205,17 +208,28 @@ struct ConditionView: View {
     // MARK: 睡眠
     
     private var sleepCard: some View {
+        
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("睡眠時間")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(Theme.primaryText)
+                
                 Spacer()
-                Button(action: actions.openSleepDurationPicker) {
-                    PillLabel(text: form.sleepMinutes?.sleepDurationText, placeholder: "選ぶ")
+                
+                Button {
+                    showSleepTimePickerView = true
+                } label: {
+                    PillLabel(
+                        text: form.sleepMinutes?.sleepDurationText,
+                        placeholder: "選ぶ"
+                    )
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("睡眠時間を選ぶ")
+                .sheet(isPresented:$showSleepTimePickerView) {
+                    SleepTimePickerSheetView(onComplete: {_ in })
+                }
             }
             .frame(minHeight: 44)
             

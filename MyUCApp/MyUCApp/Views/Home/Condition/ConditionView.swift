@@ -476,34 +476,65 @@ private struct FaceShape: Shape {
     }
 }
 
-/// 灰色の台に、選んだ項目だけ白く浮かぶ切り替え
+/// 灰色の台の上を、白いつまみがスライドして選ぶ切り替え
 private struct SegmentedChoice<Value: Hashable & Identifiable>: View {
     let options: [Value]
     let title: KeyPath<Value, String>
     @Binding var selection: Value?
     let accessibilityLabel: String
     
+    /// 「視差効果を減らす」設定のときは、動かさない
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    
+    private let spacing: CGFloat = 2
+    
+    private var selectedIndex: Int? {
+        options.firstIndex { Optional($0) == selection }
+    }
+    
+    private var slideAnimation: Animation? {
+        reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.85)
+    }
+    
     var body: some View {
-        HStack(spacing: 2) {
-            ForEach(options) { option in
-                let isSelected = selection == option
-                Button {
-                    selection = option
-                } label: {
-                    Text(option[keyPath: title])
-                        .font(.system(size: 14, weight: isSelected ? .bold : .medium))
-                        .foregroundStyle(isSelected ? Theme.accentDark : Theme.secondaryText)
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(
-                            isSelected ? Color.white : Color.clear,
-                            in: RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        )
-                        .shadow(color: isSelected ? Color.black.opacity(0.12) : .clear, radius: 1.5, y: 1)
+        GeometryReader { proxy in
+            let count = CGFloat(options.count)
+            let segmentWidth = (proxy.size.width - spacing * (count - 1)) / count
+            
+            ZStack(alignment: .leading) {
+                // 白いつまみ（1つだけ）。選んだ項目の位置まで offset で動く
+                if let index = selectedIndex {
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .fill(Color.white)
+                        .shadow(color: Color.black.opacity(0.12), radius: 1.5, y: 1)
+                        .frame(width: segmentWidth, height: proxy.size.height)
+                        .offset(x: CGFloat(index) * (segmentWidth + spacing))
+                        .transition(.opacity)
                 }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isSelected ? .isSelected : [])
+                
+                // 項目のボタン（文字だけ。背景は描かない）
+                HStack(spacing: spacing) {
+                    ForEach(options) { option in
+                        let isSelected = selection == option
+                        
+                        Button {
+                            selection = option
+                        } label: {
+                            Text(option[keyPath: title])
+                                .font(.system(size: 14, weight: isSelected ? .bold : .medium))
+                                .foregroundStyle(isSelected ? Theme.accentDark : Theme.secondaryText)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(isSelected ? .isSelected : [])
+                    }
+                }
             }
+            // 選択が変わったとき、つまみの位置と文字の色を、同じ動きで切り替える
+            .animation(slideAnimation, value: selectedIndex)
         }
+        .frame(height: 44)
         .padding(3)
         .background(Color(hex: 0xE6EEEB), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .accessibilityElement(children: .contain)

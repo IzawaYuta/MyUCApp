@@ -16,6 +16,8 @@ struct ConditionView: View {
     var date: Date = HomeDisplayData.sample.today
     var actions: ConditionActions = ConditionActions()
     
+    let customRed: Color = Color(red: 226 / 255, green: 50 / 255, blue: 50 / 255)
+    
     @State private var form: ConditionForm
     
     init(
@@ -88,7 +90,10 @@ struct ConditionView: View {
                     Button(stage.title) { form.stage = stage }
                 }
             } label: {
-                PillLabel(text: form.stage?.title)
+                PillLabel(
+                    text: form.stage?.title,
+                    isWarning: form.stage == .active
+                )
             }
             .accessibilityLabel("病期を選ぶ")
         }
@@ -203,7 +208,10 @@ struct ConditionView: View {
                     Button(status.title) { form.period = status }
                 }
             } label: {
-                PillLabel(text: form.period?.title)
+                PillLabel(
+                    text: form.period?.title,
+                    isWarning: form.period == .yes
+                )
             }
             .accessibilityLabel("生理の有無を選ぶ")
         }
@@ -265,30 +273,71 @@ private struct SectionTitle: View {
 private struct PillLabel: View {
     let text: String?
     var placeholder: String = "選択してください"
+    var isWarning: Bool = false
+    
+    private var isSet: Bool {
+        text != nil
+    }
+    
+    private var foregroundColor: Color {
+        guard isSet else {
+            return Theme.secondaryText
+        }
+        
+        return isWarning ? StatusColor.warning : StatusColor.normal
+    }
+    
+    private var dotColor: Color {
+        isWarning ? StatusColor.warning : StatusColor.normalDot
+    }
+    
+    private var backgroundColor: Color {
+        guard isSet else {
+            return .white
+        }
+        
+        return isWarning
+        ? StatusColor.warningBackground
+        : StatusColor.normalBackground
+    }
+    
+    private var borderColor: Color {
+        guard isSet else {
+            return Theme.line
+        }
+        
+        return isWarning ? StatusColor.warning : Theme.accent
+    }
     
     var body: some View {
-        let isSet = text != nil
         HStack(spacing: 8) {
             if let text {
-                Circle().fill(Theme.accent).frame(width: 8, height: 8)
+                Circle()
+                    .fill(dotColor)
+                    .frame(width: 8, height: 8)
                 Text(text)
             } else {
                 Text(placeholder)
             }
             Image(systemName: "chevron.up.chevron.down")
                 .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.black)
         }
         .font(.system(size: 16, weight: .bold))
-        .foregroundStyle(isSet ? Theme.accentDark : Theme.secondaryText)
+        .foregroundStyle(foregroundColor)
         .padding(.horizontal, 14)
         .frame(height: 44)
-        .background(isSet ? Theme.accentSoft : Color.white, in: Capsule())
-        .overlay(
-            Capsule().strokeBorder(
-                isSet ? Theme.accent : Theme.line,
-                style: StrokeStyle(lineWidth: isSet ? 1 : 1.5, dash: isSet ? [] : [4, 3])
-            )
-        )
+        .background(backgroundColor, in: Capsule())
+        .overlay {
+            Capsule()
+                .strokeBorder(
+                    borderColor,
+                    style: StrokeStyle(
+                        lineWidth: isSet ? 1 : 1.5,
+                        dash: isSet ? [] : [4, 3]
+                    )
+                )
+        }
     }
 }
 

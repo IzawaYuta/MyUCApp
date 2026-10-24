@@ -31,6 +31,22 @@ enum Theme {
     static let chipGray      = Color(hex: 0xF2F6F4)   // タグの背景
 }
 
+// MARK: - 今日の体調
+enum StatusColor {
+    // 緑色：寛解期・生理なし
+    static let normal = Theme.accentDark
+    static let normalDot = Theme.accent
+    static let normalBackground = Theme.accentSoft
+    
+    // 赤色：活動期・生理あり
+    static let warning = Color(
+        red: 226.0 / 255.0,
+        green: 50.0 / 255.0,
+        blue: 50.0 / 255.0
+    )
+    static let warningBackground = warning.opacity(0.10)
+}
+
 // MARK: - カードの見た目
 
 struct CardStyle: ViewModifier {

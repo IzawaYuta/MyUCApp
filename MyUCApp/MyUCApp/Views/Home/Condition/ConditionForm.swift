@@ -1,5 +1,6 @@
 
 import Foundation
+import SwiftUI
 
 // MARK: - 病期
 
@@ -12,6 +13,24 @@ enum DiseaseStage: CaseIterable, Identifiable {
         switch self {
         case .remission: return "寛解期"
         case .active:    return "活動期"
+        }
+    }
+    
+    var textColor: Color {
+        switch self {
+        case .remission:
+            return Color(
+                red: 7 / 255,
+                green: 7 / 255,
+                blue: 187 / 255
+            )
+        case .active:
+            return Color(
+                red: 187 / 255,
+                green: 7 / 255,
+                blue: 7 / 255
+            )
+            
         }
     }
 }

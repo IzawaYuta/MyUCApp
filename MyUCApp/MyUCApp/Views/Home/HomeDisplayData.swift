@@ -1,6 +1,30 @@
 
 import SwiftUI
 
+let customOrange: Color = Color(
+    red: 224 / 255,
+    green: 146 / 255,
+    blue: 0 / 255
+)
+
+let customBlue: Color = Color(
+    red: 47 / 255,
+    green: 169 / 255,
+    blue: 188 / 255
+)
+
+let customPurple: Color = Color(
+    red: 108 / 255,
+    green: 92 / 255,
+    blue: 231 / 255
+)
+
+let customRed: Color = Color(
+    red: 193 / 255,
+    green: 6 / 255,
+    blue: 6 / 255
+)
+
 // MARK: - 食事の種類
 
 enum MealType: CaseIterable, Identifiable {
@@ -45,7 +69,7 @@ enum MealType: CaseIterable, Identifiable {
         switch self {
         case .breakfast:
             return Color(
-                red: 224,
+                red: 224 / 255,
                 green: 146 / 255,
                 blue: 0 / 255
             )
@@ -75,7 +99,7 @@ enum MealType: CaseIterable, Identifiable {
         switch self {
         case .breakfast:
             return Color(
-                red: 224,
+                red: 224 / 255,
                 green: 146 / 255,
                 blue: 0 / 255
             )
@@ -145,7 +169,7 @@ enum MedicationSlot: CaseIterable, Identifiable {
         switch self {
         case .morning:
             return Color(
-                red: 224,
+                red: 224 / 255,
                 green: 146 / 255,
                 blue: 0 / 255
             )
@@ -175,7 +199,7 @@ enum MedicationSlot: CaseIterable, Identifiable {
         switch self {
         case .morning:
             return Color(
-                red: 224,
+                red: 224 / 255,
                 green: 146 / 255,
                 blue: 0 / 255
             )
